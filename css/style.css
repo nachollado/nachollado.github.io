@@ -5,21 +5,20 @@
     --text-muted: #a9a9b6;
     --text-muted-hero: #cdd0db;
     --text-muted-hero-shadow: rgba(0, 0, 0, 0.7); /* Sombra negra semitransparente para modo oscuro */
-    --accent: #6c63ff;
-    --accent-glow: rgba(108, 99, 255, 0.25);
+    
+    /* ===== Nuevo Acento Azul (Modo Oscuro) ===== */
+    --accent: #3b82f6; /* Azul brillante, ideal para fondos oscuros */
+    --accent-glow: rgba(59, 130, 246, 0.25);
+    
     --card-border: #2a2a35;
 
-/*  ===== Blobs de fondo =====
-    Mismos tonos morados (misma familia que --accent) en los dos temas;
-    solo cambia la opacidad de cada uno según el tema. El segundo stop
-    de cada gradiente usa el MISMO rgb que el primero con alpha 0 (en
-    vez de la palabra "transparent"), para evitar el clásico artefacto
-    de "banda oscura" que aparece al interpolar hacia negro. */
-    --blob-1-rgb: 108, 99, 255;
-    --blob-2-rgb: 124, 58, 237;
-    --blob-3-rgb: 139, 92, 246;
-    --blob-4-rgb: 99, 102, 241;
-    --blob-5-rgb: 147, 51, 234;
+/*  ===== Blobs de fondo (Gama de azules) =====
+    Mezcla de azul principal, azul cielo y azul profundo para dar volumen */
+    --blob-1-rgb: 59, 130, 246;  /* Azul principal */
+    --blob-2-rgb: 14, 165, 233;  /* Azul cielo (Sky) */
+    --blob-3-rgb: 96, 165, 250;  /* Azul claro */
+    --blob-4-rgb: 37, 99, 235;   /* Azul intenso */
+    --blob-5-rgb: 2, 132, 199;   /* Azul océano */
 
     --blob-1-a: 0.32;
     --blob-2-a: 0.22;
@@ -27,7 +26,7 @@
     --blob-4-a: 0.20;
     --blob-5-a: 0.16;
 
-/*  ===== Imagen de fondo del Hero (opcional) =====*/
+/*  ===== Imagen de fondo del Hero =====*/
     --hero-bg-image: url('../assets/img/hero-background.JPG');
     --hero-bg-pos-x: 50%;
     --hero-bg-pos-y: 35%;
@@ -40,12 +39,15 @@
     --text: #22232c;
     --text-muted: #5f5f70;
     --text-muted-hero: #40404e;
-    --text-muted-hero-shadow: rgba(255, 255, 255, 0.4); /* Halo blanco MUY sutil para modo claro */
-    --accent: #5147e5;
-    --accent-glow: rgba(81, 71, 229, 0.12);
+    --text-muted-hero-shadow: rgba(0, 0, 0, 0); /* Transparente limpio para modo claro */
+    
+    /* ===== Nuevo Acento Azul (Modo Claro) ===== */
+    --accent: #2563eb; /* Azul un poco más oscuro/saturado para contrastar en fondo blanco */
+    --accent-glow: rgba(37, 99, 235, 0.12);
+    
     --card-border: #e2e1ec;
 
-/*  Misma familia de morados que el modo oscuro, solo más tenues */
+/*  Misma familia de azules que el modo oscuro, solo más tenues */
     --blob-1-a: 0.20;
     --blob-2-a: 0.14;
     --blob-3-a: 0.12;
@@ -252,6 +254,26 @@ nav .logo {
     margin-left: 0.8rem;
     flex-shrink: 0;
     transition: color 0.4s ease, border-color 0.4s ease, background-color 0.4s ease;
+}
+
+/* Estado normal y velocidad de animación */
+.hamburger i {
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+}
+
+/* Animación de salida (Gira a la derecha) */
+.hamburger i.spin-out {
+    transform: rotate(90deg) scale(0.5);
+    opacity: 0;
+}
+
+/* Punto de partida oculto para la entrada (Teletransporte a la izquierda) */
+.hamburger i.spin-in-start {
+    transition: none !important; /* El !important evita que se anime al teletransportarse */
+    transform: rotate(-90deg) scale(0.5);
+    opacity: 0;
 }
 
 /* Panel desplegable móvil: oculto en escritorio */

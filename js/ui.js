@@ -8,13 +8,40 @@ const hamburgerIcon = hamburgerBtn.querySelector('i');
 function closeMobileMenu() {
     mobileMenu.classList.remove('open');
     hamburgerBtn.setAttribute('aria-expanded', 'false');
-    hamburgerIcon.className = 'fa-solid fa-bars';
+    
+    // Iniciamos la salida (Gira 0 -> 90)
+    hamburgerIcon.classList.add('spin-out');
+    
+    setTimeout(() => {
+        // Cambiamos el icono y lo colocamos en -90 grados (sin animar)
+        hamburgerIcon.className = 'fa-solid fa-bars spin-in-start';
+        
+        // Forzamos al navegador a registrar este cambio al instante
+        void hamburgerIcon.offsetWidth;
+        
+        // Quitamos la clase de inicio para que se anime hasta 0 grados
+        hamburgerIcon.classList.remove('spin-in-start');
+    }, 150);
 }
 
 hamburgerBtn.addEventListener('click', () => {
     const isOpen = mobileMenu.classList.toggle('open');
     hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
-    hamburgerIcon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    
+    // Iniciamos la salida
+    hamburgerIcon.classList.add('spin-out');
+    
+    setTimeout(() => {
+        // Seleccionamos el icono correspondiente y lo colocamos en -90 grados
+        const newIcon = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        hamburgerIcon.className = `${newIcon} spin-in-start`;
+        
+        // Forzamos lectura
+        void hamburgerIcon.offsetWidth;
+        
+        // Iniciamos la entrada
+        hamburgerIcon.classList.remove('spin-in-start');
+    }, 150);
 });
 
 document.getElementById('mobileNavLinks').querySelectorAll('a').forEach(link => {
@@ -25,6 +52,15 @@ document.getElementById('mobileNavLinks').querySelectorAll('a').forEach(link => 
 window.addEventListener('resize', debounce(() => {
     if (window.innerWidth > 768) closeMobileMenu();
 }, 150));
+
+// Si el usuario hace scroll, el menú se cierra
+window.addEventListener('scroll', () => {
+    // Solo ejecutamos el cierre si el menú está realmente abierto
+    if (mobileMenu.classList.contains('open')) {
+        closeMobileMenu();
+    }
+}, { passive: true }); 
+// El { passive: true } mejora el rendimiento en móviles al hacer scroll
 
 // ============================================================
 //    DETECCIÓN DE IMAGEN DE FONDO DEL HERO
