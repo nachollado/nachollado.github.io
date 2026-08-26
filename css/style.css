@@ -1,0 +1,636 @@
+:root {
+    --bg: #0f0f14;
+    --bg-secondary: #17171f;
+    --text: #e8e8ec;
+    --text-muted: #a9a9b6;
+    --text-muted-hero: #cdd0db;
+    --text-muted-hero-shadow: rgba(0, 0, 0, 0.7); /* Sombra negra semitransparente para modo oscuro */
+    --accent: #6c63ff;
+    --accent-glow: rgba(108, 99, 255, 0.25);
+    --card-border: #2a2a35;
+
+/*  ===== Blobs de fondo =====
+    Mismos tonos morados (misma familia que --accent) en los dos temas;
+    solo cambia la opacidad de cada uno según el tema. El segundo stop
+    de cada gradiente usa el MISMO rgb que el primero con alpha 0 (en
+    vez de la palabra "transparent"), para evitar el clásico artefacto
+    de "banda oscura" que aparece al interpolar hacia negro. */
+    --blob-1-rgb: 108, 99, 255;
+    --blob-2-rgb: 124, 58, 237;
+    --blob-3-rgb: 139, 92, 246;
+    --blob-4-rgb: 99, 102, 241;
+    --blob-5-rgb: 147, 51, 234;
+
+    --blob-1-a: 0.32;
+    --blob-2-a: 0.22;
+    --blob-3-a: 0.18;
+    --blob-4-a: 0.20;
+    --blob-5-a: 0.16;
+
+/*  ===== Imagen de fondo del Hero (opcional) =====*/
+    --hero-bg-image: url('../assets/img/hero-background.JPG');
+    --hero-bg-pos-x: 50%;
+    --hero-bg-pos-y: 35%;
+    --hero-overlay: rgba(6, 10, 14, 0.35);
+}
+
+[data-theme="light"] {
+    --bg: #f4f3f9;
+    --bg-secondary: #fbfaff;
+    --text: #22232c;
+    --text-muted: #5f5f70;
+    --text-muted-hero: #40404e;
+    --text-muted-hero-shadow: rgba(255, 255, 255, 0.4); /* Halo blanco MUY sutil para modo claro */
+    --accent: #5147e5;
+    --accent-glow: rgba(81, 71, 229, 0.12);
+    --card-border: #e2e1ec;
+
+/*  Misma familia de morados que el modo oscuro, solo más tenues */
+    --blob-1-a: 0.20;
+    --blob-2-a: 0.14;
+    --blob-3-a: 0.12;
+    --blob-4-a: 0.13;
+    --blob-5-a: 0.10;
+
+    --hero-overlay: rgba(255, 255, 255, 0.35);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+/*  Fallback sólido: si por lo que sea el blur del fondo no cubre
+    algún borde del viewport, aquí abajo siempre hay el color de
+    fondo correcto del tema, nunca el blanco/negro por defecto del
+    navegador. */
+html {
+    min-height: 100%;
+    background-color: var(--bg);
+    transition: background-color 0.4s ease;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    background-color: transparent;
+    transition: color 0.4s ease;
+    line-height: 1.6;
+    position: relative;
+  }
+
+/*  Fondo general con degradados suaves tipo "blobs", dispersos de forma
+    orgánica y compartido por TODA la página, incluido el hero.
+    El elemento se extiende MÁS ALLÁ del viewport (-80px por cada lado,
+    más que el radio de blur de 50px) para que cualquier suavizado de
+    borde del propio blur quede fuera de la pantalla y nunca se vea
+    como una franja oscura en los laterales. */
+body::before {
+    content: '';
+    position: fixed;
+    top: -80px;
+    left: -80px;
+    right: -80px;
+    bottom: -80px;
+    z-index: -2;
+    background-color: var(--bg);
+    background-image:
+    radial-gradient(36% 30% at 20% 12%, rgba(var(--blob-1-rgb), var(--blob-1-a)), rgba(var(--blob-1-rgb), 0) 70%),
+    radial-gradient(30% 24% at 82% 20%, rgba(var(--blob-2-rgb), var(--blob-2-a)), rgba(var(--blob-2-rgb), 0) 70%),
+    radial-gradient(40% 34% at 66% 74%, rgba(var(--blob-3-rgb), var(--blob-3-a)), rgba(var(--blob-3-rgb), 0) 70%),
+    radial-gradient(26% 22% at 8% 64%, rgba(var(--blob-4-rgb), var(--blob-4-a)), rgba(var(--blob-4-rgb), 0) 70%),
+    radial-gradient(22% 20% at 92% 90%, rgba(var(--blob-5-rgb), var(--blob-5-a)), rgba(var(--blob-5-rgb), 0) 70%);
+    filter: blur(50px);
+    transition: background-color 0.4s ease;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ===================== NAV ===================== */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--card-border);
+    z-index: 200;
+    transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+/*  Centrado robusto con 3 bloques flex: las dos columnas laterales
+    tienen el MISMO flex-grow y el MISMO flex-basis (0), así que el
+    espacio libre se reparte siempre a partes iguales entre ambas,
+    sin importar cuánto pese el logo o los controles de la derecha.
+    Eso obliga matemáticamente a que el bloque central (nav-links)
+    quede exactamente en el centro de toda la barra. */
+.nav-side {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+}
+
+.nav-side.left {
+    justify-content: flex-start;
+}
+
+.nav-side.right {
+    justify-content: flex-end;
+}
+
+nav .logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    flex: 0 0 auto;
+}
+
+.nav-links a {
+    display: inline-block;
+    text-align: center;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.lang-switch {
+    display: flex;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.4s ease;
+}
+
+.lang-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.02em;
+    transition: color 0.25s ease, background-color 0.25s ease, border-color 0.4s ease;
+}
+
+.lang-btn + .lang-btn {
+    border-left: 1px solid var(--card-border);
+}
+
+.lang-btn:hover {
+    color: var(--text);
+    background: var(--bg-secondary);
+}
+
+.lang-btn.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Botón hamburguesa: oculto en escritorio */
+.hamburger {
+    display: none;
+    background: none;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    margin-left: 0.8rem;
+    flex-shrink: 0;
+    transition: color 0.4s ease, border-color 0.4s ease, background-color 0.4s ease;
+}
+
+/* Panel desplegable móvil: oculto en escritorio */
+.mobile-menu {
+    display: none;
+}
+
+/* ===================== HERO ===================== */
+section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+}
+
+.hero {
+    max-width: none;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 5rem;
+    position: relative;
+    isolation: isolate;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--hero-bg-image);
+    background-size: cover;
+    background-position: var(--hero-bg-pos-x) var(--hero-bg-pos-y);
+    background-repeat: no-repeat;
+}
+
+/*  Oscurecido/aclarado para legibilidad del texto sobre la foto.
+    Solo se activa (opacity:1) cuando JS detecta que la imagen del
+    hero existe y carga correctamente (clase .has-image). Si no hay
+    imagen, permanece invisible y no afecta en nada a los blobs. */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: var(--hero-overlay);
+    transition: opacity 0.4s ease, background-color 0.4s ease;
+}
+
+/* ESTADO SIN SCROLL (Por defecto) */
+.hero.has-image::before,
+.hero.has-image::after {
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-size: 100% 200%;
+  mask-size: 100% 200%;
+  -webkit-mask-position: center top;
+  mask-position: center top;
+  
+  /* Añadimos opacity a la transición para no romper el oscurecido */
+  transition: mask-position 0.2s ease, -webkit-mask-position 0.2s ease, opacity 0.5s ease, background-color 0.4s ease;
+}
+
+/* ESTADO CON SCROLL */
+.hero.has-image.scrolled::before,
+.hero.has-image.scrolled::after {
+  -webkit-mask-position: center bottom;
+  mask-position: center bottom;
+}
+
+.hero.has-image::before {
+    opacity: 1;
+}
+
+.hero-inner {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.hero .greeting {
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.4s ease;
+}
+
+.hero-name {
+    font-family: 'Arial Narrow', 'Helvetica Neue Condensed', 'Segoe UI', Arial, sans-serif;
+    font-stretch: condensed;
+    font-size: clamp(2.4rem, 7vw, 4.6rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+    line-height: 1.05;
+    color: var(--text);
+    transition: color 0.4s ease;
+}
+
+.hero-name .accent {
+    color: var(--accent);
+    transition: color 0.4s ease;
+}
+
+.hero p.bio {
+    max-width: 600px;
+    color: var(--text-muted);
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+/*  La altura mínima se fija por JS (measureMaxHeight) para que no
+    se mueva nada al cambiar de idioma aunque el texto ocupe más líneas */
+    transition: color 0.4s ease;
+}
+
+.hero.has-image p.bio {
+    color: var(--text-muted-hero);
+    text-shadow: 0 1px 4px var(--text-muted-hero-shadow); /* Color de shadow adaptativo */
+    transition: color 0.4s ease, text-shadow 0.4s ease;
+}
+
+.hero .cta-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.8rem 1.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+/*  El span de texto interior recibe un min-width fijo por JS
+    (el ancho máximo entre los 3 idiomas), así el botón entero
+    no cambia de tamaño ni de sitio al cambiar de idioma */
+.btn span[data-i18n] {
+    display: inline-block;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 0 0 var(--accent-glow);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 25px 2px var(--accent-glow);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    background: var(--bg-secondary);
+}
+
+.btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+h2.section-title {
+    font-size: 1.9rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+h2.section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--card-border);
+    transition: background 0.4s ease;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+}
+
+.skill-chip {
+    background: var(--bg-secondary);
+    border: 1px solid var(--card-border);
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.skill-chip:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.project-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.6rem;
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.project-card:hover::before {
+    transform: scaleX(1);
+}
+
+.project-card h3 {
+    margin-bottom: 0.6rem;
+    font-size: 1.15rem;
+}
+
+.project-card p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 1rem;
+}
+
+.project-card a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+.project-card a:hover { text-decoration: underline; }
+
+.contact-section {
+    text-align: center;
+}
+
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.contact-links a {
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--card-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.contact-links a:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    transform: translateY(-4px);
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--card-border);
+    transition: border-top 0.4s ease;
+}
+
+/* ===================== MOBILE (<=768px) ===================== */
+@media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-side.right .nav-controls { display: none; }
+    .hamburger { display: flex; }
+
+    .mobile-menu {
+        display: block;
+        position: fixed;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--card-border);
+        z-index: 150;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease, background 0.4s ease, border-bottom 0.4s ease;
+    }
+
+    .mobile-menu.open {
+        max-height: 420px;
+    }
+
+    .mobile-menu-inner {
+        padding: 1.2rem 2rem 1.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.4rem;
+    }
+
+    .nav-links-mobile {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-links-mobile a {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.4s ease;
+    }
+
+    .mobile-controls-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    section { padding: 6rem 1.2rem 3rem; }
+    .hero-inner { padding: 0 1.2rem; }
+}

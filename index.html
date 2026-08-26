@@ -1,4 +1,151 @@
-<div>
-  <h1>Nacho Lladó Resumé</h1>
-  <p>This will contain Nacho Lladó's Resumé, check out in some time!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nacho Lladó</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-side left">
+    <span class="logo">NL.</span>
+  </div>
+
+  <ul class="nav-links" id="navLinksDesktop">
+    <li><a href="#sobre-mi" data-i18n="nav.about" data-i18n-fixed-width="true">Sobre mí</a></li>
+    <li><a href="#skills" data-i18n="nav.skills" data-i18n-fixed-width="true">Habilidades</a></li>
+    <li><a href="#proyectos" data-i18n="nav.projects" data-i18n-fixed-width="true">Proyectos</a></li>
+    <li><a href="#contacto" data-i18n="nav.contact" data-i18n-fixed-width="true">Contacto</a></li>
+  </ul>
+
+  <div class="nav-side right">
+    <div class="nav-controls">
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="cat">CAT</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button class="theme-toggle" data-theme-toggle aria-label="Change theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <ul class="nav-links-mobile" id="mobileNavLinks">
+      <li><a href="#sobre-mi" data-i18n="nav.about">Sobre mí</a></li>
+      <li><a href="#skills" data-i18n="nav.skills">Habilidades</a></li>
+      <li><a href="#proyectos" data-i18n="nav.projects">Proyectos</a></li>
+      <li><a href="#contacto" data-i18n="nav.contact">Contacto</a></li>
+    </ul>
+    <div class="mobile-controls-row">
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="cat">CAT</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button class="theme-toggle" data-theme-toggle aria-label="Change theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
+  </div>
 </div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="greeting" data-i18n="hero.greeting">¡Hola! Soy</p>
+
+    <h1 class="hero-name">Nacho <span class="accent">Lladó</span></h1>
+
+    <p class="bio" data-i18n="hero.bio" data-i18n-fixed-height="true">
+      Text did not load correctly, please try refreshing the page...
+    </p>
+
+    <div class="cta-group">
+      <a href="#proyectos" class="btn btn-primary">
+        <i class="fa-solid fa-diagram-project"></i>
+        <span data-i18n="hero.cta1" data-i18n-fixed-width="true">Ver proyectos</span>
+      </a>
+      <a href="assets/docs/cv_nacho_llado_2026-en.pdf" id="btn-download-cv" class="btn btn-outline" download>
+        <i class="fa-solid fa-file-arrow-down"></i>
+        <span data-i18n="hero.cta2" data-i18n-fixed-width="true">Descargar CV</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="sobre-mi">
+  <h2 class="section-title reveal" data-i18n="about.title">Sobre mí</h2>
+  <p class="reveal" data-i18n="about.text" style="color: var(--text-muted); font-size: 1.05rem; white-space: pre-line;">
+    Text did not load properly, please try refreshing the page.
+  </p>
+</section>
+
+<section id="skills">
+  <h2 class="section-title reveal" data-i18n="skills.title">Habilidades</h2>
+  <div class="skills-grid reveal">
+    <div class="skill-chip">OpenAI API</div>
+    <div class="skill-chip">JavaScript</div>
+    <div class="skill-chip">Python</div>
+    <div class="skill-chip">Git</div>
+    <div class="skill-chip">Node.js</div>
+    <div class="skill-chip">React</div>
+    <div class="skill-chip">C / C++</div>
+  </div>
+</section>
+
+<section id="proyectos">
+  <h2 class="section-title reveal" data-i18n="projects.title">Proyectos</h2>
+  <div class="projects-grid reveal">
+    <div class="project-card">
+      <h3 data-i18n="projects.title1">Digital Twin Chatbot</h3>
+      <p data-i18n="projects.desc1">Project did not load properly. Please try refreshing the page.</p>
+      <a href="#" target="_blank"><span data-i18n="projects.github">Ver en GitHub</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+    </div>
+    <div class="project-card">
+      <h3 data-i18n="projects.title2">Thesis: HuntDown Tool</h3>
+      <p data-i18n="projects.desc2">Project did not load properly. Please try refreshing the page.</p>
+      <a href="#" target="_blank"><span data-i18n="projects.github">Ver en GitHub</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+    </div>
+    <div class="project-card">
+      <h3 data-i18n="projects.title3">Personal Portfolio</h3>
+      <p data-i18n="projects.desc3">Project did not load properly. Please try refreshing the page.</p>
+      <a href="https://github.com/nachollado/nachollado.github.io" target="_blank"><span data-i18n="projects.github">Ver en GitHub</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" class="contact-section">
+  <h2 class="section-title reveal" data-i18n="contact.title">Hablemos</h2>
+  <p class="reveal" data-i18n="contact.text" style="color: var(--text-muted);">
+    ¿Buscas a alguien con mi perfil? Escríbeme, estaré encantado de charlar.
+  </p>
+  <div class="contact-links reveal">
+    <a href="mailto:nacholladocortes@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+    <a href="https://www.linkedin.com/in/nachollado" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+    <a href="https://github.com/nachollado" target="_blank" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+  </div>
+</section>
+
+<footer>
+  <span>© <span id="current-year"></span> Nacho Lladó. </span>
+  <span data-i18n="footer.text">Desarrollado con la ayuda de Claude y desplegado en GitHub Pages.</span>
+</footer>
+
+<script defer src="js/utils.js"></script>
+<script defer src="js/theme.js"></script>
+<script defer src="js/ui.js"></script>
+<script defer src="js/i18n.js"></script>
+<script defer src="js/main.js"></script>
+
+</body>
+</html>
