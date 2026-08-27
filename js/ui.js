@@ -8,6 +8,7 @@ const hamburgerIcon = hamburgerBtn.querySelector('i');
 function closeMobileMenu() {
     mobileMenu.classList.remove('open');
     hamburgerBtn.setAttribute('aria-expanded', 'false');
+    hamburgerBtn.blur(); // Quitar foco al botón hamburguesa
     
     // Iniciamos la salida (Gira 0 -> 90)
     hamburgerIcon.classList.add('spin-out');
@@ -22,6 +23,7 @@ function closeMobileMenu() {
         // Quitamos la clase de inicio para que se anime hasta 0 grados
         hamburgerIcon.classList.remove('spin-in-start');
     }, 150);
+
 }
 
 hamburgerBtn.addEventListener('click', () => {
