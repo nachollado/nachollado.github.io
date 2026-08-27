@@ -201,6 +201,7 @@ nav .logo {
 .lang-btn {
     background: none;
     border: none;
+    -webkit-tap-highlight-color: transparent; /* Desactiva Glow azul al seleccionar en móviles */
     color: var(--text-muted);
     padding: 0.4rem 0.7rem;
     font-size: 0.8rem;
@@ -229,6 +230,7 @@ nav .logo {
     background: var(--nav-btn-bg);
     border: 1px solid var(--nav-btn-border);
     color: var(--text);
+    -webkit-tap-highlight-color: transparent; /* Desactiva Glow azul al seleccionar en móviles */
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -252,6 +254,7 @@ nav .logo {
     background: var(--nav-btn-bg);
     border: 1px solid var(--nav-btn-border);
     color: var(--text);
+    -webkit-tap-highlight-color: transparent; /* Desactiva Glow azul al seleccionar en móviles */
     width: 40px;
     height: 40px;
     border-radius: 8px;
